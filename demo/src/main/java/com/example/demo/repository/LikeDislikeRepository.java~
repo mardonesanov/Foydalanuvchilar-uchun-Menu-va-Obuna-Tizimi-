@@ -1,0 +1,16 @@
+package com.example.demo.repository;
+
+import com.example.demo.entity.LikeDislike;
+import com.example.demo.entity.Menu;
+import com.example.demo.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface LikeDislikeRepository extends JpaRepository<LikeDislike, Long> {
+
+    // Find all reactions (likes or dislikes) for a specific menu
+    List<LikeDislike> findByMenu(Menu menu);
+
+    // Find reactions by menu and user (for preventing duplicate likes/dislikes)
+    LikeDislike findByMenuAndUser(Menu menu, User user);
+}

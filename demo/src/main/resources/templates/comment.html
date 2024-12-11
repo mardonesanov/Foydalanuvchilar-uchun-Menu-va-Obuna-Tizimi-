@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izohlar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h3>Izohlar</h3>
+
+    <form th:action="@{/comments/add/{menuId}(menuId=${menu.id})}" method="post">
+        <input type="hidden" name="userId" th:value="${user.id}">
+        <div class="form-group">
+            <label for="content">Izoh:</label>
+            <textarea id="content" name="content" class="form-control" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Izoh Qo'shish</button>
+    </form>
+
+    <hr>
+
+    <h4>Izohlar:</h4>
+    <div>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="comment : ${comments}">
+                <strong th:text="${comment.user.username}">Username</strong>:
+                <span th:text="${comment.content}">Content</span>
+                <p class="text-muted" th:text="${comment.createdAt}">Created At</p>
+                <div th:if="${comment.user.id == user.id or menu.user.id == user.id}">
+                    <form th:action="@{/comments/delete/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
+                        <input type="hidden" name="menuId" th:value="${menu.id}">
+                        <input type="hidden" name="userId" th:value="${user.id}">
+                        <button type="submit" class="btn btn-danger btn-sm">O'chirish</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

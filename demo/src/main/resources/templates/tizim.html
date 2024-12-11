@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tizim</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://media.istockphoto.com/id/1263930234/vector/bright-colorful-abstract-blurry-background.jpg?s=612x612&w=0&k=20&c=lT0bmgf11FYIGRB4DAIr2UbjKhRSzOrN0e0Xoa6IcFA=') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+        }
+
+        .bottom-nav {
+            background-color: #ffffff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #eaeaea;
+        }
+        .bottom-nav a {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .bottom-nav a.active {
+            color: #007bff;
+        }
+        .bottom-nav i {
+            font-size: 20px;
+        }
+        .bottom-nav p {
+            margin: 0;
+            font-size: 12px;
+        }
+        .card-title {
+            font-weight: 600;
+        }
+        .card-text {
+            font-size: 14px;
+        }
+        .section-title {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .menu-card {
+            position: relative;
+            border: none;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .menu-card .user-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .menu-card .user-label img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .user-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            animation: float 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .menu-actions {
+            margin-top: 10px;
+        }
+
+        .menu-actions button {
+            margin-right: 5px;
+        }
+
+        .menu-actions i {
+            margin-right: 5px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input {
+            width: 70%;
+            border: 2px solid #ccc;
+            border-radius: 25px;
+            padding: 10px 20px;
+            outline: none;
+        }
+
+        .search-bar button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Assalomu alaykum, <span th:text="${user.username}"></span></h1>
+
+    <div th:if="${role} == 'sheef'">
+        <a th:href="@{/add_menu(userId=${user.id})}" class="btn btn-success mb-4"><i class="fas fa-plus-circle"></i> Menu Qo'shish</a>
+    </div>
+
+    <div class="search-bar">
+        <form th:action="@{/user/tizim}" method="get">
+            <input type="hidden" th:name="userId" th:value="${user.id}">
+            <input type="text" th:name="search" th:value="${searchQuery}" placeholder="Menuni qidiring...">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Qidiruv
+            </button>
+        </form>
+    </div>
+
+    <h2 class="section-title">
+        <img th:src="${user.profileImageUrl}" alt="User Image" class="user-image">
+        Foydalanuvchi: <span th:text="${user.username}"></span>
+    </h2>
+
+    <div class="row">
+        <div class="col-md-4" th:each="menu : ${currentUserMenus}">
+            <div class="card mb-4 menu-card">
+                <span class="user-label">
+                    <img th:src="${menu.user.profileImageUrl}" alt="User Image">
+                    <span th:text="${menu.user.username}"></span>
+                </span>
+                <img th:src="${menu.imageUrl}" class="card-img-top" alt="Rasm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${menu.productName}"></h5>
+                    <p class="card-text"><i class="fas fa-coins"></i> Narxi: <span th:text="${menu.price}"></span> UZS</p>
+                    <p class="card-text"><i class="fas fa-tag"></i> Tur: <span th:text="${menu.category}"></span></p>
+                    <div class="menu-actions">
+                        <form th:action="@{/save_menu}" method="post" class="d-inline">
+                            <input type="hidden" name="userId" th:value="${user.id}" />
+                            <input type="hidden" name="menuId" th:value="${menu.id}" />
+                            <button type="submit" class="btn btn-outline-primary btn-sm"><i class="fas fa-bookmark"></i> Saqlash</button>
+                        </form>
+                        <a th:href="@{/download_menu(menuId=${menu.id})}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-download"></i> Yuklab olish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:each="subscribedBlock : ${subscribedUserMenusList}">
+        <h2 class="section-title" th:text="'Foydalanuvchi: ' + ${subscribedBlock.subscribedUser.username}"></h2>
+        <div class="row">
+            <div class="col-md-4" th:each="menu : ${subscribedBlock.menus}">
+                <div class="card mb-4 menu-card">
+                    <span class="user-label">
+                        <img th:src="${menu.user.profileImageUrl}" alt="User Image">
+                        <span th:text="${menu.user.username}"></span>
+                    </span>
+                    <img th:src="${menu.imageUrl}" class="card-img-top" alt="Rasm">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${menu.productName}"></h5>
+                        <p class="card-text"><i class="fas fa-coins"></i> Narxi: <span th:text="${menu.price}"></span> UZS</p>
+                        <p class="card-text"><i class="fas fa-tag"></i> Tur: <span th:text="${menu.category}"></span></p>
+                        <div class="menu-actions">
+                            <form th:action="@{/save_menu}" method="post" class="d-inline">
+                                <input type="hidden" name="userId" th:value="${user.id}" />
+                                <input type="hidden" name="menuId" th:value="${menu.id}" />
+                                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="fas fa-bookmark"></i> Saqlash</button>
+                            </form>
+                            <a th:href="@{/download_menu(menuId=${menu.id})}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-download"></i> Yuklab olish</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="bottom-nav d-flex justify-content-around p-3 fixed-bottom">
+    <a th:href="@{/user/tizim(userId=${user.id})}" class="text-center">
+        <i class="fas fa-home"></i>
+        <p>Tizim</p>
+    </a>
+    <a th:href="@{/saved(userId=${user.id})}" class="text-center">
+        <i class="fas fa-bookmark"></i>
+        <p>Saqlanganlar</p>
+    </a>
+    <a th:href="@{/profile/user/{userId}(userId=${user.id})}" class="text-center">
+        <i class="fas fa-user"></i>
+        <p>Profil</p>
+    </a>
+    <a th:href="@{/settings_content(userId=${user.id})}" class="text-center">
+        <i class="fas fa-cog"></i>
+        <p>Sozlamalar</p>
+    </a>
+    <a th:href="@{/personal/user/{userId}(userId=${user.id})}" class="text-center">
+        <i class="fas fa-list"></i>
+        <p>Shaxsiy</p>
+    </a>
+    <a th:href="@{/chat/list/{userId}(userId=${user.id})}" class="text-center">
+        <i class="fas fa-comment"></i>
+        <p>Chatlar</p>
+    </a>
+    <a th:href="@{/notifications/{userId}(userId=${user.id})}" class="text-center">
+        <i class="fas fa-bell"></i>
+        <p>Bildirishnomalar</p>
+    </a>
+
+</div>
+
+</body>
+</html>

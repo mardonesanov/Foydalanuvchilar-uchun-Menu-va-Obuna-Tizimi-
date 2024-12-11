@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foydalanuvchilar Ro'yxati</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            color: #f8f9fa;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+        }
+        h1, h2, th, td {
+            font-weight: bold;
+        }
+        h1 {
+            color: #e9ecef;
+        }
+        h2 {
+            margin-top: 20px;
+            color: #ffc107;
+        }
+        .table {
+            color: #f8f9fa;
+            background: transparent;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .table tbody tr {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .table tbody tr:not(:last-child) {
+            margin-bottom: 15px;
+        }
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .icon-btn:hover {
+            transform: scale(1.1);
+            opacity: 0.9;
+        }
+        .profile-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .profile-img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .btn-secondary {
+            color: #fff;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-secondary:hover {
+            color: #ffc107;
+            text-decoration: none;
+        }
+        .username {
+            font-weight: normal !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fa-solid fa-handshake"></i><span th:text="${currentUsername}"></span>!</h1>
+    <h2><i class="fa-solid fa-users"></i> Foydalanuvchilar Ro'yxati</h2>
+
+    <table class="table table-borderless mt-4">
+        <thead>
+        <tr>
+            <th><i class="fa-solid fa-hashtag"></i></th>
+            <th><i class="fa-solid fa-image"></i> Profil rasmi</th>
+            <th><i class="fa-solid fa-user"></i> Foydalanuvchi nomi</th>
+            <th><i class="fa-solid fa-phone"></i> Telefon raqami</th>
+            <th><i class="fa-solid fa-cogs"></i> Amallar</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="user, iterStat : ${users}">
+            <td th:text="${iterStat.count}"></td>
+            <td>
+                <img th:if="${user.profileImageUrl != null}"
+                     th:src="@{${user.profileImageUrl}}"
+                     alt="Profil rasmi"
+                     class="profile-img">
+                <span th:if="${user.profileImageUrl == null}" class="text-muted">Rasm mavjud emas</span>
+            </td>
+            <td class="username" th:text="${user.username}"></td>
+            <td th:text="${user.phoneNumber}"></td>
+            <td>
+                <form th:action="@{/subscribe}" method="post" class="d-inline">
+                    <input type="hidden" name="userId" th:value="${user.id}">
+                    <input type="hidden" name="currentUserId" th:value="${currentUserId}">
+                    <button type="submit" class="btn btn-success icon-btn">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </form>
+                <form th:action="@{/unsubscribe}" method="post" class="d-inline">
+                    <input type="hidden" name="userId" th:value="${user.id}">
+                    <input type="hidden" name="currentUserId" th:value="${currentUserId}">
+                    <button type="submit" class="btn btn-danger icon-btn">
+                        <i class="fa-solid fa-user-minus"></i>
+                    </button>
+                </form>
+                <a th:href="@{/message/{senderId}/{receiverId}(senderId=${currentUserId}, receiverId=${user.id})}"
+                   class="btn btn-primary icon-btn">
+                    <i class="fa-solid fa-comments"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/user/tizim(userId=${currentUserId})}" class="btn btn-secondary mt-4">
+        <i class="fa-solid fa-arrow-left"></i> Orqaga
+    </a>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

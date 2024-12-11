@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foydalanuvchi Profili</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <!-- Foydalanuvchi Profil Ma'lumotlari -->
+    <div class="row">
+        <div class="col-12">
+            <h2 th:text="${user.username} + ' - Profil'">Foydalanuvchi Profili</h2>
+            <img th:if="${user.profileImageUrl != null}" th:src="@{${user.profileImageUrl}}" alt="Profil rasmi" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+            <p><strong>Telefon raqam: </strong><span th:text="${user.phoneNumber}">Telefon raqam</span></p>
+        </div>
+    </div>
+
+    <!-- Menyular ro'yxati -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Foydalanuvchi Qo'shgan Menyular</h3>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Mahsulot nomi</th>
+                    <th>Kategoriya</th>
+                    <th>Narxi</th>
+                    <th>Rasm</th>
+                    <th>Like</th>
+                    <th>Dislike</th>
+                    <th>Izoh Qo'shish</th> <!-- Izoh Qo'shish tugmasi uchun ustun -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="menu : ${menus}">
+                    <td th:text="${menu.productName}">Mahsulot nomi</td>
+                    <td th:text="${menu.category}">Kategoriya</td>
+                    <td th:text="${menu.price}">Narxi</td>
+                    <td><img th:if="${menu.imageUrl != null}" th:src="@{${menu.imageUrl}}" alt="Menyu rasmi" style="width: 50px; height: 50px; border-radius: 5px;"></td>
+                    <td>
+                        <!-- Like tugmasi -->
+                        <form th:action="@{/information/like/{menuId}(menuId=${menu.id})}" method="post" style="display: inline;">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-thumbs-up"></i> Like
+                            </button>
+                        </form>
+                        <span th:text="${menu.likes}">Like</span>
+                    </td>
+                    <td>
+                        <!-- Dislike tugmasi -->
+                        <form th:action="@{/information/dislike/{menuId}(menuId=${menu.id})}" method="post" style="display: inline;">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-thumbs-down"></i> Dislike
+                            </button>
+                        </form>
+                        <span th:text="${menu.dislikes}">Dislike</span>
+                    </td>
+                    <td>
+                        <!-- Izoh Qo'shish tugmasi -->
+                        <a href="#commentSection${menu.id}" class="btn btn-info" data-bs-toggle="collapse">Izoh Qo'shish</a>
+
+                        <!-- Izoh qo'shish formasi -->
+                        <div id="commentSection${menu.id}" class="collapse mt-3">
+                            <form th:action="@{/comments/add/{menuId}(menuId=${menu.id})}" method="post">
+                                <input type="hidden" name="userId" th:value="${user.id}">
+                                <div class="form-group">
+                                    <!-- Dynamically set 'for' and 'id' to match -->
+                                    <label for="content${menu.id}">Izoh:</label>
+                                    <textarea id="content${menu.id}" name="content" class="form-control" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">Izoh Qo'shish</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

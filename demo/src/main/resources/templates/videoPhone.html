@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .call-button, .video-call-button {
+            padding: 10px 20px;     /* Padding around the text */
+            border: none;           /* No border */
+            font-size: 16px;        /* Font size of the text */
+            cursor: pointer;       /* Pointer cursor when hovering */
+            border-radius: 5px;     /* Rounded corners */
+            color: white;           /* Text color */
+        }
+        .call-button {
+            background-color: red; /* Red background color */
+        }
+
+        /* Green video call button style */
+        .video-call-button {
+            background-color: green; /* Green background color */
+        }
+        .call-button:hover {
+            background-color: darkred; /* Dark red color when hovering */
+        }
+
+        .video-call-button:hover {
+            background-color: darkgreen; /* Dark green color when hovering */
+        }
+    </style>
+</head>
+<body>
+<button class="call-button" onclick="window.location.href='message.html'">Qo'ngiroq</button>
+
+<button class="video-call-button" onclick="window.location.href='video_call.html'">Video Qo'ngiroq</button>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sozlamalar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        h1 {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .btn {
+            margin: 15px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: bold;
+            border-radius: 0;
+            background-color: #ffcc00;
+            border: none;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background-color: #e6b800;
+        }
+        .btn-group .btn {
+            border-radius: 0;
+        }
+        .toggle-button {
+            cursor: pointer;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: white;
+        }
+        .light-mode {
+            background-color: white;
+            color: black;
+        }
+        .profile-img-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #007bff;
+            transition: transform 0.3s;
+        }
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+        .upload-btn-label {
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .dropdown-menu {
+            border-radius: 10px;
+        }
+        .dropdown-item {
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+        .text-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+        .theme-toggle-btn {
+            border: 2px solid #007bff;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: #ffcc00;
+            border-color: #e6b800;
+        }
+        .theme-toggle-btn:hover {
+            background-color: #e6b800;
+            color: white;
+        }
+        .info-box {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #007bff;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .info-box:hover {
+            background-color: #e6e6fa;
+            transform: scale(1.03);
+        }
+        .info-box i {
+            color: #007bff;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body class="light-mode">
+<div class="container mt-5">
+    <div class="text-overlay"></div>
+    <div class="content">
+        <h1 class="text-center"><i class="fa-solid fa-cogs"></i> Sozlamalar</h1>
+
+        <div class="text-center mt-4 profile-img-container">
+            <img th:src="${user.profileImageUrl != null ? user.profileImageUrl : '/images/default-profile.png'}"
+                 class="profile-img shadow" alt="Profile Image">
+        </div>
+
+        <div class="text-center mt-3">
+            <form th:action="@{/settings/upload_image}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <label for="profileImage" class="btn upload-btn-label"><i class="fa-solid fa-upload"></i> Rasm yuklash</label>
+                <input type="file" id="profileImage" name="profileImage" class="d-none" onchange="this.form.submit();">
+            </form>
+        </div>
+
+        <div class="info-box">
+            <i class="fa-solid fa-user-circle"></i>
+            <a th:href="@{/settings(userId=${user.id})}" class="text-decoration-none text-dark">Hisobim</a>
+        </div>
+        <div class="info-box">
+            <i class="fa-solid fa-info-circle"></i>
+            <a th:href="@{/about}" class="text-decoration-none text-dark">Biz haqimizda</a>
+        </div>
+
+        <div class="info-box">
+            <i class="fa-solid fa-comment"></i>
+            <a href="https://t.me/esanov_wr" class="text-decoration-none text-dark">Bizga habar bering</a>
+        </div>
+
+        <button class="theme-toggle-btn" id="toggleThemeButton"><i class="fa-solid fa-lightbulb"></i> Rangni o'zgartirish</button>
+
+        <div class="btn-group mt-3 mx-auto" style="max-width: 300px; display: block;">
+            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-language"></i> Tilni tanlash
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="setLanguage('uzb')"><i class="fa-solid fa-flag"></i> Uzbek</a></li>
+                <li><a class="dropdown-item" href="#" onclick="setLanguage('rus')"><i class="fa-solid fa-flag"></i> Русский</a></li>
+                <li><a class="dropdown-item" href="#" onclick="setLanguage('eng')"><i class="fa-solid fa-flag"></i> English</a></li>
+            </ul>
+        </div>
+
+        <div class="text-center mt-3">
+            <a th:href="@{/user/tizim(userId=${user.id})}" class="btn btn-outline-primary"><i class="fa-solid fa-arrow-left"></i> Orqaga</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const notificationButton = document.getElementById('notificationButton');
+    let notificationsEnabled = false;
+
+    notificationButton.addEventListener('click', () => {
+        notificationsEnabled = !notificationsEnabled;
+        notificationButton.innerHTML = notificationsEnabled
+            ? '<i class="fa-solid fa-bell"></i> Bildirishnoma o\'chirish'
+            : '<i class="fa-solid fa-bell"></i> Bildirishnoma yoqish';
+    });
+
+    const toggleThemeButton = document.getElementById('toggleThemeButton');
+    const body = document.body;
+
+    toggleThemeButton.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        body.classList.toggle('light-mode');
+    });
+
+    function setLanguage(language) {
+        alert(language + ' tili tanlandi!');
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

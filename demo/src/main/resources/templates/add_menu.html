@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Qo'shish</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Menu Qo'shish</h2>
+    <form action="/add_menu" method="post" class="needs-validation" novalidate>
+        <input type="hidden" name="userId" th:value="${userId}">
+        <div class="mb-3">
+            <label for="productName" class="form-label">Maxsulot nomi</label>
+            <input type="text" class="form-control" id="productName" name="productName" required>
+            <div class="invalid-feedback">Maxsulot nomini kiriting.</div>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Narxi</label>
+            <input type="number" class="form-control" id="price" name="price" required>
+            <div class="invalid-feedback">Narxni kiriting.</div>
+        </div>
+        <div class="mb-3">
+            <label for="imageUrl" class="form-label">Rasm URL</label>
+            <input type="text" class="form-control" id="imageUrl" name="imageUrl" required>
+            <div class="invalid-feedback">Rasm URL ni kiriting.</div>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category" required>
+                <option value="Salatlar">Salatlar</option>
+                <option value="Milliy taomlar">Milliy taomlar</option>
+                <option value="Ichimliklar">Ichimliklar</option>
+                <option value="Fassfooflar">Fassfooflar</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Qo'shish</button>
+    </form>
+</div>
+</body>
+</html>

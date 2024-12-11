@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaxsiy Sahifa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <style>
+        /* Full background image with blur */
+        body {
+            background-image: url('https://images.iphonephotographyschool.com/22679/1120/How-To-Blur-Background-On-iPhone.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Creating the blur effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
+            filter: blur(8px);  /* Apply blur effect */
+            z-index: -1;  /* Ensure it's behind the content */
+        }
+        .btn {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #28a745; /* Green */
+            transform: translateY(-5px); /* Slight lift effect */
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Slight zoom effect */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
+        }
+        .card-title, .card-text {
+            transition: color 0.3s ease;
+        }
+
+        .card:hover .card-title,
+        .card:hover .card-text {
+            color: #007bff; /* Change text color on hover */
+        }
+        body {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .btn i {
+            font-size: 1.2em;
+        }
+        .btn-warning, .btn-danger {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-warning:hover, .btn-danger:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">
+        <i class="bi bi-person-circle me-2"></i>Shaxsiy Menyular
+    </h1>
+    <form th:action="@{/update_role}" method="post" class="mb-4">
+        <input type="hidden" name="userId" th:value="${userId}" />
+        <label for="role" class="form-label">
+            <i class="bi bi-person-badge me-2"></i>Rolni tanlang:
+        </label>
+        <select class="form-select" id="role" name="role" onchange="this.form.submit()">
+            <option value="user" th:selected="${role == 'user'}">
+                <i class="bi bi-person me-2"></i>User
+            </option>
+            <option value="sheef" th:selected="${role == 'sheef'}">
+                <i class="bi bi-person-fill me-2"></i>Sheef
+            </option>
+        </select>
+    </form>
+
+    <div th:if="${role == 'sheef'}">
+        <a th:href="@{/add_menu(userId=${userId})}" class="btn btn-success mb-4">
+            <i class="bi bi-plus-circle me-2"></i>
+            <span>Menyu Qo'shish</span>
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4" th:each="menu : ${userMenus}">
+            <div class="card mb-4 shadow-sm">
+                <img th:src="${menu.imageUrl}" class="card-img-top" alt="Rasm" style="height: 150px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-box me-2"></i>
+                        <span th:text="${menu.productName}"></span>
+                    </h5>
+
+                    <p class="card-text">
+                        <i class="bi bi-currency-usd me-2"></i>
+                        <span th:text="${menu.price}"></span> UZS
+                    </p>
+                    <p class="card-text">
+                        <i class="bi bi-collection me-2"></i>
+                        <span th:text="${menu.category}"></span>
+                    </p>
+                    <div th:if="${role == 'sheef'}">
+                        <!-- Tahrirlash va o'chirish tugmalari faqat 'sheef' roliga ko'rsatiladi -->
+                        <a th:href="@{/update_menu(menuId=${menu.id})}" class="btn btn-warning me-2">
+                            <i class="bi bi-pencil-fill me-2"></i> <span>Tahrirlash</span>
+                        </a>
+                        <form th:action="@{/delete_menu}" method="post" class="d-inline-block">
+                            <input type="hidden" name="menuId" th:value="${menu.id}">
+                            <input type="hidden" name="userId" th:value="${userId}">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash-fill me-2"></i> <span>O'chirish</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

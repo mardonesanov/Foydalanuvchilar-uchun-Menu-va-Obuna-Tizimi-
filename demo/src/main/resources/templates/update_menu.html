@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Taxrirlash</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('https://pngmagic.com/product_images/light-blue-backgrounds-images-free-download-photos-and-vectors.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            background: rgba(255, 229, 100, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-label i {
+            margin-right: 8px;
+            color: #f39c12;
+        }
+
+        button {
+            width: 100%;
+            font-size: 1.2em;
+            border-radius: 5px;
+        }
+
+        .btn-secondary {
+            margin-top: 15px;
+            background-color: #f7c046;
+            color: #2c3e50;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f39c12;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Menu Taxrirlash</h1>
+    <form th:action="@{/update_menu}" th:object="${menu}" method="post">
+        <input type="hidden" th:field="*{id}">
+
+        <input type="hidden" th:field="*{user.id}">
+        <div class="mb-3">
+            <label for="productName" class="form-label">
+                <i class="bi bi-pencil-square"></i> Maxsulot nomi
+            </label>
+            <input type="text" class="form-control" id="productName" th:field="*{productName}" placeholder="Maxsulot nomini kiriting" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">
+                <i class="bi bi-currency-dollar"></i> Narxi
+            </label>
+            <input type="number" class="form-control" id="price" th:field="*{price}" placeholder="Maxsulot narxini kiriting" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="imageUrl" class="form-label">
+                <i class="bi bi-image"></i> Rasm URL
+            </label>
+            <input type="text" class="form-control" id="imageUrl" th:field="*{imageUrl}" placeholder="Rasm URL manzilini kiriting" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">
+                <i class="bi bi-tag"></i> Tur
+            </label>
+            <select class="form-select" id="category" th:field="*{category}" required>
+                <option value="Salatlar" th:selected="${menu.category == 'Salatlar'}">Salatlar</option>
+                <option value="Milliy taomlar" th:selected="${menu.category == 'Milliy taomlar'}">Milliy taomlar</option>
+                <option value="Ichimliklar" th:selected="${menu.category == 'Ichimliklar'}">Ichimliklar</option>
+                <option value="Fassfoodlar" th:selected="${menu.category == 'Fassfoodlar'}">Fassfoodlar</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Saqlash
+        </button>
+        <a th:href="@{/personal/user/{userId}(userId=${menu.user.id})}" class="btn btn-secondary">
+            <i class="bi bi-x-circle"></i> Bekor qilish
+        </a>
+    </form>
+</div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+</body>
+</html>
